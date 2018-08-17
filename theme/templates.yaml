@@ -1,0 +1,17 @@
+- name: Standard Page
+  description: ''
+  img: null
+  form:
+    class_name: Form
+    container:
+      type: HtmlTemplate
+      properties: {html: '@theme:standard-page.html'}
+    components:
+    - type: ColumnPanel
+      properties: {}
+      name: content_panel
+      layout_properties: {slot: default}
+    code: "from anvil import *\n\nclass $NAME$($NAME$Template):\n\n  def __init__(self,\
+      \ **properties):\n    # You must call self.init_components() before doing anything\
+      \ else in this function\n    self.init_components(**properties)\n\n    # Any\
+      \ code you write here will run when the form opens.\n    \n"

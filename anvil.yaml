@@ -1,0 +1,7 @@
+dependency_code: {}
+package_name: form_checker
+name: Clone of Form Validation
+startup_form: Form1
+renamed: true
+runtime_options: {server_version: python2-sandbox}
+services: []
