@@ -1,6 +1,6 @@
 package_name: form_checker
 name: Form Validation
-startup_form: null
+startup_form: Form1
 renamed: true
 runtime_options: {server_version: python2-sandbox}
 services: []
