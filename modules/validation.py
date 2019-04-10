@@ -54,7 +54,7 @@ to check the status of the form.
    
   def require_text_field(self, text_box, error_lbl=None, show_errors_immediately=False):
     self.require(text_box, ['change', 'lost_focus'],
-                 lambda tb: tb.text != '',
+                 lambda tb: tb.text not in ('', None),
                  error_lbl, show_errors_immediately)
         
   def require_checked(self, check_box, error_lbl=None, show_errors_immediately=False):
