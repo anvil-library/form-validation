@@ -1,3 +1,16 @@
+def validation_event_handler(validator, predicate, component, error_lbl, **event_args):
+    """Returns a function to act as a validation event handler"""
+
+    def handler(**event_args):
+        result = predicate(component)
+        validator._validity[component] = result
+        if error_lbl is not None:
+            error_lbl.visible = not result
+        validator._check()
+
+    return handler
+
+
 class Validator:
     """
 A Validator instance performs form validation. You give it
@@ -12,7 +25,14 @@ Add components to it with the require() method. Eg:
   validator.require(self.text_box_1, ['change', 'lost_focus'],
                     lambda tb: tb.text != '',
                     self.error_lbl_1)
-                    
+
+For existing event handlers which also need validation, call the validate() method. e.g.
+
+    def text_box_1_change(self, **event_args):
+        validator.validate(self.text_box_1, lambda tb: tb.text != '', self.error_lbl_1)
+        call_some_other_method()
+        do_other_things()
+
 It also has some utility functions for common requirements
 such as "this text box must have text in it", or
 "this checkbox must be checked".
@@ -39,13 +59,10 @@ to check the status of the form.
         error_lbl=None,
         show_errors_immediately=False,
     ):
-        def check_this_component(**e):
-            result = predicate(component)
-            self._validity[component] = result
-            if error_lbl is not None:
-                error_lbl.visible = not result
-            self._check()
 
+        check_this_component = validation_event_handler(
+            self, predicate, component, error_lbl
+        )
         for e in event_list:
             component.set_event_handler(e, check_this_component)
         self._component_checks.append(check_this_component)
@@ -58,7 +75,13 @@ to check the status of the form.
             if error_lbl is not None:
                 error_lbl.visible = False
             self._validity[component] = predicate(component)
-            self._check()
+
+    def validate(self, component, predicate, error_lbl=None):
+        check_this_component = validation_event_handler(
+            self, predicate, component, error_lbl
+        )
+        self._component_checks.append(check_this_component)
+        check_this_component()
 
     def require_text_field(
         self, text_box, error_lbl=None, show_errors_immediately=False
@@ -71,18 +94,20 @@ to check the status of the form.
             show_errors_immediately,
         )
 
-    def require_checked(self, check_box, error_lbl=None, show_errors_immediately=False):
-        self.require(
-            check_box,
-            ["change"],
-            lambda cb: cb.checked,
-            error_lbl,
-            show_errors_immediately,
-        )
+        def require_checked(
+            self, check_box, error_lbl=None, show_errors_immediately=False
+        ):
+            self.require(
+                check_box,
+                ["change"],
+                lambda cb: cb.checked,
+                error_lbl,
+                show_errors_immediately,
+            )
 
-    def enable_when_valid(self, component):
-        def on_change(is_valid):
-            component.enabled = is_valid
+            def enable_when_valid(self, component):
+                def on_change(is_valid):
+                    component.enabled = is_valid
 
         self._actions.append(on_change)
         self._check()
