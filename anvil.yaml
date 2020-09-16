@@ -1,7 +1,8 @@
 package_name: form_checker
+db_schema: []
 name: Form Validation
 startup_form: Form1
 renamed: true
-runtime_options: {server_version: python2-sandbox, client_version: '2'}
+runtime_options: {server_version: python2-sandbox, client_version: '2', version: 2}
 metadata: {}
 services: []
