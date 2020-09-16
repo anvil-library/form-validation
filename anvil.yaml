@@ -2,6 +2,6 @@ package_name: form_checker
 name: Form Validation
 startup_form: Form1
 renamed: true
-runtime_options: {server_version: python2-sandbox}
+runtime_options: {server_version: python2-sandbox, client_version: '2'}
 metadata: {}
 services: []
